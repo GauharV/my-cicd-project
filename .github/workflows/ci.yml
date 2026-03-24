@@ -34,6 +34,11 @@ jobs:
       - name: Lint
         run: flake8 .
 
-      # Run tests, skip external, require ≥80% coverage
+      # Run tests: skip slow + external, fail-fast, require ≥80% coverage
       - name: Test
-        run: pytest -x -m "not external" --cov=src --cov-fail-under=80
+        run: >
+          pytest -x
+          -m "not external and not slow"
+          --cov=src
+          --cov-report=xml
+          --cov-fail-under=80
