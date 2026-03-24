@@ -1,0 +1,39 @@
+# Workflow name — appears in GitHub Actions tab
+name: CI
+
+on:
+  # Only watch pushes to "main" branch (not feature branches)
+  push:
+    branches: [main]
+  # Also run for every PR regardless of which branch
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out source code at the triggering commit
+      - uses: actions/checkout@v4
+
+      # Install Python 3.12 on the runner VM
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+
+      # Cache pip packages — saves ~90s when requirements.txt hasn't changed
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+      # Install all dependencies declared in the requirements file
+      - name: Install
+        run: pip install -r requirements.txt
+
+      # Lint — fail immediately on style errors
+      - name: Lint
+        run: flake8 src/ tests/
+
+      # Run tests, skip external, require ≥80% coverage
+      - name: Test
+        run: pytest -x -m "not external" --cov=src --cov-fail-under=80
