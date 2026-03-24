@@ -12,7 +12,43 @@ def test_divide_by_zero():
     with pytest.raises(ValueError):
         divide(5, 0)
 
-# Marked — skipped in CI, runs nightly on schedule
-@pytest.mark.external
-def test_external_api():
-    pass  # placeholder for live API call
+
+def test_divide_fraction():
+    assert divide(1, 4) == pytest.approx(0.25)
+
+
+# --- power ---
+
+def test_power_positive_exponent():
+    assert power(2, 10) == 1024
+
+
+def test_power_zero_exponent():
+    assert power(99, 0) == 1
+
+
+def test_power_one_exponent():
+    assert power(7, 1) == 7
+
+
+def test_power_negative_exponent():
+    assert power(2, -1) == pytest.approx(0.5)
+
+
+# --- modulo ---
+
+def test_modulo_basic():
+    assert modulo(10, 3) == 1
+
+
+def test_modulo_even_division():
+    assert modulo(9, 3) == 0
+
+
+def test_modulo_by_zero_raises():
+    with pytest.raises(ValueError, match="Cannot modulo by zero"):
+        modulo(5, 0)
+
+
+def test_modulo_large_numbers():
+    assert modulo(1000, 7) == 6
