@@ -32,7 +32,7 @@ jobs:
 
       # Lint — fail immediately on style errors
       - name: Lint
-        run: flake8 src/ tests/
+        run: flake8 .
 
       # Run tests, skip external, require ≥80% coverage
       - name: Test
